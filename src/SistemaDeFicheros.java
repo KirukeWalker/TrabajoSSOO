@@ -34,7 +34,10 @@ public class SistemaDeFicheros {
 			System.out.println("Reservado: "+metadatos[i].reservado);
 			System.out.println("Dañado: "+metadatos[i].danyado);
 			System.out.println("Fin: "+metadatos[i].fin);
-			System.out.println("Siguiente: "+metadatos[i].siguiente.posicion);
+			if(metadatos[i].siguiente!=null){
+				System.out.println("Siguiente: "+metadatos[i].siguiente.posicion);
+			}
+			else{System.out.println("Siguiente: NULL");}
 		}
 	}
 	
@@ -57,8 +60,39 @@ public class SistemaDeFicheros {
 			raiz.carpeta[posicionRaiz]=new EntradaDirectorio(contenido, i, 'A');
 			metadatos[i].fin=true;
 			}
-			datos[0]=raiz;
+		datos[0]=raiz;
+	}
+	
+	public void crearArchivo(String contenido, String directorio)
+	{
+		Directorio dir=new Directorio(" ");
+		int i=0;
+		while(datos[i].tipo!='d'){
+			i++;
+			if(datos[i].contenido==directorio){
+				dir=(Directorio)datos[i];
+			}
+			else{i++;}
 		}
+		
+		int a=0;
+		for(i=0; i<metadatos.length; i++){
+			if(metadatos[i].disponible==true) a++;
+		}
+		if(a<=0) System.out.println("no hay espacio suficiente");
+		else{
+			i=0;
+			int posicionRaiz=0;
+			while(dir.carpeta[posicionRaiz]!=null) 
+				posicionRaiz++;
+			while(metadatos[i].disponible!=true)
+				i++;
+			metadatos[i].disponible = false;
+			datos[i]= new Archivo(contenido);
+			dir.carpeta[posicionRaiz]=new EntradaDirectorio(contenido, i, 'A');
+			metadatos[i].fin=true;
+			}
+	}
 	
 	public void crearDirectorio(String nombre)
 	{

@@ -1,11 +1,10 @@
 
 public class Archivo extends Cluster {
 	
-	String contenido;
 	
-	public Archivo(String contenido)
+	public Archivo(String cont)
 	{
 		tipo='a';
-		this.contenido = contenido;
+		contenido = cont;
 	}
 }

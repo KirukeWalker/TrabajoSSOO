@@ -29,13 +29,13 @@ public class Consola {
 				sdf.Mostrar();
 				break;
 			case 2:
-				sdf.crearDirectorio("Directorio1");
+				sdf.crearDirectorio("tmp");
 				break;
 			case 3:
 				break;
 			case 4:
 				sdf.crearArchivo("Archivo1");
-				sdf.crearArchivo("Archivo2");
+				sdf.crearArchivo("Archivo2","tmp");
 				break;
 			case 5:
 				break;
@@ -44,6 +44,7 @@ public class Consola {
 			case 7:
 				break;
 			case 8:
+				sdf.mostrarMetadatos();
 				break;
 			case 9:
 				break;
