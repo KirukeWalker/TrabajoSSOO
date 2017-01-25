@@ -18,7 +18,7 @@ public class Consola {
 			System.out.println("	5. Borrar Archivo");
 			System.out.println("	6. Copiar Archivo");
 			System.out.println("	7. Mover Archivo");
-			System.out.println("	8.");
+			System.out.println("	8. Mostrar metadatos");
 			System.out.println("	9.");
 			System.out.println("	10. Salir");
 			

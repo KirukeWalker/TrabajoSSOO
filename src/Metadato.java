@@ -4,7 +4,6 @@ public class Metadato {
 	boolean disponible,danyado,fin,reservado;
 	int posicion;
 	Metadato siguiente;
-	protected Cluster contenido;
 	
 	public Metadato(int i)
 	{
@@ -14,7 +13,6 @@ public class Metadato {
 		fin = false;
 		reservado = false;
 		siguiente = null;
-		contenido = SistemaDeFicheros.datos[i];
 	}
 	
 	
