@@ -112,6 +112,57 @@ public class SistemaDeFicheros {
 			raiz.carpeta[posicionRaiz]=new EntradaDirectorio(nombre, i, 'D');
 		}else System.out.println("No hay espacio suficiente");
 	}
+	public void mover(String nombre, String origen, String destino){
+		Directorio dir = new Directorio(" ");
+		Directorio der = new Directorio(" ");
+		EntradaDirectorio enDir = new EntradaDirectorio(nombre, 0, 'a');
+		
+		int i=0;
+		
+		int clusterOrigen=0;
+		while(!datos[clusterOrigen].contenido.equals(origen)){
+			clusterOrigen++;
+		}
+		if(datos[clusterOrigen].contenido.equals(origen)){
+			dir=(Directorio)datos[clusterOrigen];
+			
+			int clusterDestino=0;
+			while(!datos[clusterDestino].contenido.equals(origen)){
+				clusterDestino++;
+			}
+			if(datos[clusterDestino].contenido.equals(origen)){
+				der=(Directorio)datos[clusterDestino];
+				
+				int j=0;
+				while(dir.carpeta[j]!=null){
+					if(!dir.carpeta[j].nombre.equals(nombre)){
+						j++;
+					}else break;
+				}
+				
+				if(dir.carpeta[j].nombre.equals(nombre)){
+					enDir = dir.carpeta[j];
+					
+					dir.carpeta[j].nombre=null;
+					dir.carpeta[j].clusterInicio=-1;
+					dir.carpeta[j].tipo='w';
+					
+					int p=0;
+					while(der.carpeta[p] != null){
+						p++;
+					}
+					if(der.carpeta[p]==null){
+						der.carpeta[p]=enDir;
+					}
+					datos[clusterDestino]=der;
+					datos[clusterOrigen]=dir;
+				}
+			}
+			else System.out.println("El directorio no existe");
+		}
+		else System.out.println("El directorio no existe");
+		
+	}
 	
 	public StringTokenizer devolverST(String ruta) throws Exception
 	{

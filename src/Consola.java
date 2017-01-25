@@ -42,6 +42,7 @@ public class Consola {
 			case 6:
 				break;
 			case 7:
+				sdf.mover("Archivo2", "tmp", "C:");
 				break;
 			case 8:
 				sdf.mostrarMetadatos();
