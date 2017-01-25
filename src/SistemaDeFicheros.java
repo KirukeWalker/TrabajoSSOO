@@ -67,14 +67,14 @@ public class SistemaDeFicheros {
 	{
 		Directorio dir=new Directorio(" ");
 		int i=0;
-		while(datos[i].tipo!='d'){
-			i++;
-			if(datos[i].contenido==directorio){
-				dir=(Directorio)datos[i];
-			}
-			else{i++;}
+		int posDirDatos=0;
+		while(!datos[posDirDatos].contenido.equals(directorio)){
+			posDirDatos++;
 		}
-		
+		if(datos[posDirDatos].contenido.equals(directorio)){
+			dir=(Directorio)datos[posDirDatos];
+		}
+		else System.out.println("El directorio no existe");
 		int a=0;
 		for(i=0; i<metadatos.length; i++){
 			if(metadatos[i].disponible==true) a++;
@@ -90,6 +90,7 @@ public class SistemaDeFicheros {
 			metadatos[i].disponible = false;
 			datos[i]= new Archivo(contenido);
 			dir.carpeta[posicionRaiz]=new EntradaDirectorio(contenido, i, 'A');
+			datos[posDirDatos]=dir;
 			metadatos[i].fin=true;
 			}
 	}
