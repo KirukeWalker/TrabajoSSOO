@@ -1,13 +1,17 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-
 public class SistemaDeFicheros {
-
 	static Cluster[] datos;
 	Metadato[] metadatos;
 	private int tamanyo = 20;
 	private int tamCluster=4;
 	static Directorio raiz;
+	
+	InputStreamReader isr = new InputStreamReader(System.in);
+	BufferedReader br = new BufferedReader (isr);
 	
 	public SistemaDeFicheros()
 	{			
@@ -53,7 +57,7 @@ public class SistemaDeFicheros {
 		else{
 			i=0;
 			int posicionRaiz=0;
-			while(raiz.carpeta[posicionRaiz].nombre!=null){
+			while(raiz.carpeta[posicionRaiz]!=null){
 				posicionRaiz++;
 			}
 			while(numClusters!=0){
@@ -70,13 +74,14 @@ public class SistemaDeFicheros {
 				}
 				metadatos[i].disponible = false;
 				datos[i]= new Archivo(parteContenido);
+				if(b<tamCluster){
+					raiz.carpeta[posicionRaiz]=new EntradaDirectorio(contenido, i, 'A');
+				}
 				if(clusterAnterior!=-1){
 					if(numClusters==0) metadatos[i].fin=true;
 					else metadatos[clusterAnterior].siguiente=metadatos[i];
 				}else{
-					raiz.carpeta[posicionRaiz].clusterInicio=i;
-					raiz.carpeta[posicionRaiz].nombre=contenido;
-					raiz.carpeta[posicionRaiz].tipo='A';
+					raiz.carpeta[posicionRaiz]=new EntradaDirectorio(contenido, i, 'A');
 					datos[0]=raiz;
 				}
 				clusterAnterior=i;
@@ -88,22 +93,55 @@ public class SistemaDeFicheros {
 	{
 		int i=0;
 		
-		while(metadatos[i].disponible!=true)
-		{
+		while(metadatos[i].disponible!=true){
 			i++;
 		}
-		metadatos[i].disponible = false;
-		datos[i]=new Directorio(nombre);
+		if(metadatos[i].disponible){
+			metadatos[i].disponible = false;
+			datos[i]=new Directorio(nombre);
+			int posicionRaiz=0;
+			while(raiz.carpeta[posicionRaiz]!=null){
+				posicionRaiz++;
+			}
+			raiz.carpeta[posicionRaiz]=new EntradaDirectorio(nombre, i, 'D');
+		}else System.out.println("No hay espacio suficiente");
 	}
 	
-	public void devolverDirectorio(String ruta) throws Exception
+	public StringTokenizer devolverST(String ruta) throws Exception
 	{
-		Cluster c = new Cluster();
-		if ( c instanceof Directorio) 
-		{
-			Directorio d = (Directorio) c;
-			StringTokenizer st = new StringTokenizer(ruta,"/");
-		}
+		StringTokenizer st = new StringTokenizer(ruta,"/");
+		return st;
 	}
-	
+
+	public void Mostrar() throws Exception{
+		System.out.println("Introduzca directorio a mostrar (Ej: C/Caperta/Carpeta2\n");
+		String ruta;
+		ruta=br.readLine();
+		int carpetaAnterior=0;
+		StringTokenizer st = devolverST(ruta);
+		String subStr;
+		int i=0;
+		while(st.hasMoreTokens()){
+			subStr=st.nextToken();
+			if(subStr.equals("C")){
+				carpetaAnterior=1;
+			}else{
+				Directorio carpeta=(Directorio) datos[carpetaAnterior];
+				while(!carpeta.carpeta[i].nombre.equals(subStr)){
+					i++;
+				}
+				if(carpeta.carpeta[i].nombre.equals(subStr))
+					carpetaAnterior=carpeta.carpeta[i].clusterInicio;
+				else{
+					System.out.println("Error de ruta\n");
+					break;
+				}
+			}
+		}
+		Directorio carpeta=(Directorio) datos[carpetaAnterior];
+		i=0;
+		while(carpeta.carpeta[i]!=null){
+			System.out.println(carpeta.carpeta[i].nombre);
+		}
+	}	
 }

@@ -4,10 +4,10 @@ public class SistemaOperativo {
 	SistemaDeFicheros FAT;
 	Consola interfaz;
 	
-	public SistemaOperativo()
+	public SistemaOperativo() throws Exception
 	{
 		FAT = new SistemaDeFicheros();
-		interfaz = new Consola();
+		interfaz = new Consola(FAT);
 	}
 	
 	
