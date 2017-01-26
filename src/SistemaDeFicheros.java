@@ -8,12 +8,15 @@ public class SistemaDeFicheros extends Thread {
 	private int tamanyo = 20;
 	Directorio raiz;
 	boolean running;
+	String[] procEjec=new String[20];
 	
 	InputStreamReader isr = new InputStreamReader(System.in);
 	BufferedReader br = new BufferedReader (isr);
 	
 	public SistemaDeFicheros()
 	{			
+		procEjec[0]="SistemaOperativo";
+		procEjec[1]="Consola";
 		datos = new Cluster[tamanyo];
 		metadatos= new Metadato[tamanyo];
 		raiz = new Directorio("C:");
@@ -93,7 +96,7 @@ public class SistemaDeFicheros extends Thread {
 			dir.carpeta[posicionRaiz]=new EntradaDirectorio(contenido, i, 'A');
 			datos[posDirDatos]=dir;
 			metadatos[i].fin=true;
-			}
+		}
 	}
 	
 	public void crearDirectorio(String nombre)
@@ -239,6 +242,8 @@ public class SistemaDeFicheros extends Thread {
 	}
 	
 	public void run(){
+		running=true;
+		procEjec[2]="BorrarTMPCada5Seg";
 		while(running){
 			eliminarDirectorio("tmp");
 			try {
@@ -252,5 +257,37 @@ public class SistemaDeFicheros extends Thread {
 	
 	public void killRun(){
 		running=false;
+	}
+	
+	public void mostrarProc(){
+		System.out.println("Procesos en ejecución: ");
+		for(int i=0;i<procEjec.length;i++){
+			if(procEjec[i]!=null){
+				System.out.println(procEjec[i]);
+			}
+		}
+	}
+	
+	public void matarProceso(String nom){
+		for(int i=0;i<procEjec.length;i++){
+			if(procEjec[i]!=null){
+				if(procEjec[i].equals(nom)){
+					procEjec[i]=null;
+				}
+			}
+		}
+	}
+	
+	public void mostrarDirectorio(String nom){
+		int clusterOrigen=0;
+		while(!datos[clusterOrigen].contenido.equals(nom)){
+			clusterOrigen++;
+		}
+		Directorio dir=(Directorio)datos[clusterOrigen];
+		for(int i=0;i<dir.carpeta.length;i++){
+			if(dir.carpeta[i]!=null&&dir.carpeta[i].nombre!=null&&metadatos[dir.carpeta[i].clusterInicio].disponible==false){
+				System.out.println(dir.carpeta[i].nombre);
+			}
+		}
 	}
 }
