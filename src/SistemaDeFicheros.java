@@ -1,13 +1,13 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class SistemaDeFicheros {
+public class SistemaDeFicheros extends Thread {
 	Cluster[] datos;
 	Metadato[] metadatos;
 	private int tamanyo = 20;
 	Directorio raiz;
+	boolean running;
 	
 	InputStreamReader isr = new InputStreamReader(System.in);
 	BufferedReader br = new BufferedReader (isr);
@@ -23,6 +23,7 @@ public class SistemaDeFicheros {
 		datos[0]=raiz;
 		metadatos[0].disponible=false;
 		metadatos[0].fin=true;
+		running=true;
 	}
 	
 	public void mostrarMetadatos()
@@ -35,9 +36,9 @@ public class SistemaDeFicheros {
 			System.out.println("Dañado: "+metadatos[i].danyado);
 			System.out.println("Fin: "+metadatos[i].fin);
 			if(metadatos[i].siguiente!=null){
-				System.out.println("Siguiente: "+metadatos[i].siguiente.posicion);
+				System.out.println("Siguiente: "+metadatos[i].siguiente.posicion+"\n");
 			}
-			else{System.out.println("Siguiente: NULL");}
+			else{System.out.println("Siguiente: NULL\n");}
 		}
 	}
 	
@@ -112,6 +113,7 @@ public class SistemaDeFicheros {
 			raiz.carpeta[posicionRaiz]=new EntradaDirectorio(nombre, i, 'D');
 		}else System.out.println("No hay espacio suficiente");
 	}
+	
 	public void mover(String nombre, String origen, String destino){
 		Directorio dir = new Directorio(" ");
 		Directorio der = new Directorio(" ");
@@ -145,7 +147,7 @@ public class SistemaDeFicheros {
 					
 					dir.carpeta[j].nombre=null;
 					dir.carpeta[j].clusterInicio=-1;
-					dir.carpeta[j].tipo='w';
+					dir.carpeta[j].tipo=' ';
 					
 					int p=0;
 					while(der.carpeta[p] != null){
@@ -160,9 +162,43 @@ public class SistemaDeFicheros {
 			}
 			else System.out.println("El directorio no existe");
 		}
-		else System.out.println("El directorio no existe");
-		
+		else System.out.println("El directorio no existe");	
 	}
+	
+	public void eliminarArchivo(String nom, String lugar){
+		int clusterOrigen=0;
+		while(!datos[clusterOrigen].contenido.equals(lugar)){
+			clusterOrigen++;
+		}
+		int i=0;
+		Directorio dir=new Directorio(" ");
+		dir=(Directorio)datos[clusterOrigen];
+		while(!dir.carpeta[i].nombre.equals(nom)){
+			i++;
+		}
+		if(dir.carpeta[i].nombre.equals(nom)){
+			dir.carpeta[i].nombre=null;
+			dir.carpeta[i].clusterInicio=-1;
+			dir.carpeta[i].tipo=' ';
+		}
+	}
+	
+	public void eliminarDirectorio(String nomb){
+		int clusterOrigen=0;
+		while(!datos[clusterOrigen].contenido.equals(nomb)){
+			clusterOrigen++;
+		}
+		Directorio dir=new Directorio(" ");
+		dir=(Directorio)datos[clusterOrigen];
+		int i=0;
+		while(dir.carpeta[i]!=null){
+			int aux=dir.carpeta[i].clusterInicio;
+			metadatos[aux].disponible=true;
+			i++;
+		}
+		metadatos[clusterOrigen].disponible=true;
+	}
+	
 	
 	public StringTokenizer devolverST(String ruta) throws Exception
 	{
@@ -200,5 +236,21 @@ public class SistemaDeFicheros {
 		while(carpeta.carpeta[i]!=null){
 			System.out.println(carpeta.carpeta[i].nombre);
 		}
-	}	
+	}
+	
+	public void run(){
+		while(running){
+			eliminarDirectorio("tmp");
+			try {
+				sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void killRun(){
+		running=false;
+	}
 }

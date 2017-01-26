@@ -2,11 +2,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Consola {
+public class Consola extends Thread {
 	InputStreamReader isr = new InputStreamReader(System.in);
 	BufferedReader br = new BufferedReader (isr);
+	SistemaDeFicheros sdf;
 	
-	Consola (SistemaDeFicheros sdf) throws Exception{
+	Consola(SistemaDeFicheros sistdefich){
+		sdf=sistdefich;
+	}
+	
+	
+	public void run(){
 		int option=0;
 		while(option!=10){
 			option=0;
@@ -22,22 +28,34 @@ public class Consola {
 			System.out.println("	9.");
 			System.out.println("	10. Salir");
 			
-			option =Integer.parseInt (br.readLine());
+			try {
+				option =Integer.parseInt (br.readLine());
+			} catch (NumberFormatException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			switch(option){
 			case 1:
-				sdf.Mostrar();
+				try {
+					sdf.killRun();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				break;
 			case 2:
 				sdf.crearDirectorio("tmp");
 				break;
 			case 3:
+				sdf.eliminarDirectorio("tmp");
 				break;
 			case 4:
 				sdf.crearArchivo("Archivo1");
 				sdf.crearArchivo("Archivo2","tmp");
 				break;
 			case 5:
+				sdf.eliminarArchivo("Archivo2", "tmp");
 				break;
 			case 6:
 				break;
@@ -48,6 +66,7 @@ public class Consola {
 				sdf.mostrarMetadatos();
 				break;
 			case 9:
+				sdf.start();
 				break;
 			}
 		}
